@@ -1,0 +1,15 @@
+{
+  "tenant": "sandbox",
+  "endpoint": "https://fleet.example.invalid",
+  "tokenEnv": "FLEET_READ_TOKEN",
+  "bindings": {
+    "managed-001": 7
+  },
+  "policyIds": {
+    "diskEncrypted": 1,
+    "firewallEnabled": 2,
+    "patchAgeDays": 3,
+    "localAdminCount": 4,
+    "mdmEnrolled": 5
+  }
+}

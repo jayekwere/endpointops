@@ -1,0 +1,93 @@
+
+> endpointops@1.0.0 verify
+> npm run format:check && npm run typecheck && npm test && npm run build && npm run demo
+
+
+> endpointops@1.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> endpointops@1.0.0 typecheck
+> tsc --noEmit && tsc -p tsconfig.web.json
+
+
+> endpointops@1.0.0 test
+> node --import tsx --test --test-concurrency=1 test/*.test.ts
+
+✔ known failures, missing data and stale data are distinct from passing posture (8.6995ms)
+✔ approved local remediation verifies changed posture and replay causes no second mutation (2.85575ms)
+✔ ticket closure requires a fresh passing observation and preserves its evidence digest (3.799084ms)
+✔ changed target, changed observation, stale snapshot and wrong digest prevent mutation (3.471542ms)
+✔ physical devices cannot receive the synthetic remediation (1.009541ms)
+✔ device credentials are shown once, scoped, hashed in storage and omitted from exports (1.954667ms)
+✔ device ingestion rejects replay, forged device IDs, old envelopes and extra fields (1.855334ms)
+✔ manual credential rotation invalidates the old token immediately (1.764708ms)
+✔ asset lifecycle checks versions, ownership and terminal retirement (1.530208ms)
+✔ stale or malformed observations cannot overwrite evidence and duplicates do not open duplicate tickets (0.804041ms)
+✔ Fleet adapter validates the pinned host and retains unknown numeric checks (18.846458ms)
+✔ read-only local collector produces the strict contract without serials or account names (75.779334ms)
+✔ HTTP authorization separates tenants, enrollment credentials, observations and remediation (107.13375ms)
+✔ network diagnostics use real local DNS/TCP and report an unsupported TLS endpoint as failure (18.273792ms)
+✔ failed persisted readback rolls back remediation, approval consumption and idempotency (1.278584ms)
+✔ signed access tokens map application permissions from the server registry (12.923875ms)
+✔ access-token constraint: issuer (1.3495ms)
+✔ access-token constraint: audience (0.563125ms)
+✔ access-token constraint: expired (0.5865ms)
+✔ access-token constraint: future (0.451542ms)
+✔ access-token constraint: lifetime (0.615583ms)
+✔ access-token constraint: subject (0.522083ms)
+✔ access-token constraint: type (0.422ms)
+✔ access-token constraint: jti (0.642084ms)
+✔ access-token constraint: forged-privileges (0.563209ms)
+✔ missing, malformed, foreign, symmetric and oversized bearer tokens fail closed (1.234083ms)
+✔ RS256 public verification works and private JWKS or duplicate registry subjects reject (42.2005ms)
+✔ canonical request fingerprints preserve order of arrays and ignore object key order (0.303792ms)
+✔ rate buckets expire, enforce capacity and reject excess requests (0.205375ms)
+✔ audit edits and middle deletion fail verification; persistence and wrong-key checks work (5.417625ms)
+✔ nested transactions roll back only the failed nested savepoint (0.473917ms)
+✔ independent review and execution reject self-approval even with combined roles (0.836625ms)
+✔ approval expiry, changed policy, wrong digest and rejection prevent dispatch (0.718625ms)
+✔ idempotency binds actor and exact operation and never claims a completed plan twice (1.159292ms)
+✔ HTTP boundary rejects untrusted origins, hosts, tokens, oversized bodies and excess traffic (61.418792ms)
+✔ fixed endpoint transport refuses unsafe URL shapes, redirects, oversized and malformed responses (17.579958ms)
+✔ completed operation replay remains read-only after reopening durable state (5.046958ms)
+✔ a failed transaction start leaves the next request in a fresh immediate transaction (0.364375ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1076.560041
+
+> endpointops@1.0.0 build
+> tsc && node scripts/build-web.mjs
+
+
+> endpointops@1.0.0 demo
+> node --import tsx scripts/demo.ts
+
+{
+  "scope": "synthetic device remediation, real read-only collector contract checked separately",
+  "prematureClosureStatus": 409,
+  "repair": {
+    "scope": "local-simulation",
+    "deviceId": "lab-laptop",
+    "action": "enable-lab-firewall",
+    "before": "da765ad05412edb1413d36af2e58244cd040f26b05a5c9b737ecda5773efe1e6",
+    "after": "b86c5a111b9e7031c94beebd1b7f24628763078334eb2a8e1b24205c68f21db5",
+    "verified": true
+  },
+  "duplicateMutation": false,
+  "ticketStatus": "resolved",
+  "passingChecks": 5,
+  "collector": {
+    "schemaValidated": true,
+    "publicReadings": "omitted to avoid publishing workstation posture"
+  },
+  "supportBundlePrivacy": "No usernames, addresses, process lists, recovery keys, or credentials collected",
+  "auditIntegrity": true
+}

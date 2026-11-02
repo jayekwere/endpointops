@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+    <title>EndpointOps | Operations workspace</title>
+  </head>
+  <body class="endpoint">
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand"><span class="mark">◇</span>EndpointOps</div>
+        <div>
+          <p class="overline">Operations workspace</p>
+          <nav class="nav">
+            <a href="#devices" class="active">◈ &nbsp; Devices</a
+            ><a href="#tickets" class="">◎ &nbsp; Support queue</a
+            ><a href="#review" class="">▣ &nbsp; Reviewed changes</a
+            ><a href="#activity" class="">▤ &nbsp; Evidence</a>
+          </nav>
+        </div>
+        <div class="side-note">
+          <span class="dot"></span> Scoped. Verified. Recorded.<br />Independent review by design<br /><br />v1.0.0
+          · Reference service
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="topbar">
+          <div class="crumb">Workspace / <b>EndpointOps</b></div>
+          <div class="connection">
+            <label for="token">Access token</label
+            ><input
+              id="token"
+              type="password"
+              placeholder="Paste your access token"
+              autocomplete="off"
+              aria-label="Access token"
+            /><button id="connect">Connect</button
+            ><button id="disconnect" class="ghost">Disconnect</button
+            ><span id="status" class="status" role="status">Disconnected</span>
+          </div>
+        </header>
+        <main class="main">
+          <div class="heading">
+            <div>
+              <span class="overline">A clear view of every managed endpoint</span>
+              <h1>Know the device. Verify the change.</h1>
+              <p>Track assets, inspect posture, and close support cases with fresh evidence.</p>
+            </div>
+            <button id="refresh" class="ghost">↻ Refresh</button>
+          </div>
+          <div id="notice" class="notice" role="status">
+            Connect to your workspace to load records and operational evidence.
+          </div>
+          <section class="stats" aria-label="Operational metrics">
+            <article class="stat">
+              <div class="stat-top">Enrolled devices<span class="stat-icon">▣</span></div>
+              <b class="value" id="device-count">0</b><small>Tenant inventory</small>
+            </article>
+            <article class="stat">
+              <div class="stat-top">Failing checks<span class="stat-icon">⊘</span></div>
+              <b class="value" id="failing-count">0</b><small>Fresh observations only</small>
+            </article>
+            <article class="stat">
+              <div class="stat-top">Unknown checks<span class="stat-icon">?</span></div>
+              <b class="value" id="unknown-count">0</b><small>Missing or stale evidence</small>
+            </article>
+            <article class="stat">
+              <div class="stat-top">Open support cases<span class="stat-icon">◷</span></div>
+              <b class="value" id="ticket-count">0</b><small>Readback required to resolve</small>
+            </article>
+          </section>
+          <div class="grid">
+            <div>
+              <section class="panel" id="inventory-panel">
+                <div class="panel-head">
+                  <h2>Device inventory</h2>
+                  <span class="badge">Evidence from observations</span>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Device</th>
+                        <th>Lifecycle</th>
+                        <th>Posture</th>
+                        <th>Observation</th>
+                      </tr>
+                    </thead>
+                    <tbody id="devices"></tbody>
+                  </table>
+                </div>
+              </section>
+              <section class="panel" id="ticket-panel">
+                <div class="panel-head">
+                  <h2>Support queue</h2>
+                  <span class="badge">Verify before closure</span>
+                </div>
+                <div id="tickets" class="empty">Connect to load support cases.</div>
+              </section>
+              <section class="panel" id="review">
+                <div class="panel-head">
+                  <h2>Reviewed operations</h2>
+                  <span class="badge">Exact plan binding</span>
+                </div>
+                <div id="plans" class="empty">Connect to load plans.</div>
+              </section>
+              <section class="panel" id="activity">
+                <div class="panel-head">
+                  <h2>Activity ledger</h2>
+                  <span class="badge">Tenant scoped</span>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Actor</th>
+                        <th>Evidence</th>
+                      </tr>
+                    </thead>
+                    <tbody id="audit"></tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+            <div>
+              <section class="panel" id="detail">
+                <div class="panel-head">
+                  <h2>Device detail</h2>
+                  <span class="badge">Known, failed, or unknown</span>
+                </div>
+                <div class="panel-body">
+                  <label for="selected-device">Device</label
+                  ><select id="selected-device" class="inline-input"></select>
+                  <div id="findings"></div>
+                  <div class="toolbar">
+                    <button id="plan-remediation" class="primary">Plan lab firewall repair</button
+                    ><button id="support">Export support bundle</button>
+                  </div>
+                  <p class="subtle">
+                    The repair changes only a synthetic device record. Physical devices are
+                    observed, never changed.
+                  </p>
+                </div>
+              </section>
+              <section class="panel" id="asset">
+                <div class="panel-head">
+                  <h2>Asset lifecycle</h2>
+                  <span class="badge">Version checked</span>
+                </div>
+                <div class="panel-body">
+                  <div class="control-grid">
+                    <div>
+                      <label for="asset-state">Next state</label
+                      ><select id="asset-state">
+                        <option value="assigned">Assigned</option>
+                        <option value="in-transit">In transit</option>
+                        <option value="returned">Returned</option>
+                        <option value="retired">Retired</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="owner">Owner alias, for assignment</label
+                      ><input id="owner" autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="toolbar">
+                    <button id="transition">Record asset transition</button>
+                  </div>
+                  <p class="subtle">
+                    Ownership aliases and regional codes avoid personal shipping records.
+                  </p>
+                </div>
+              </section>
+              <section class="panel" id="enroll">
+                <div class="panel-head">
+                  <h2>Enroll a device</h2>
+                  <span class="badge">Operator access</span>
+                </div>
+                <div class="panel-body">
+                  <label for="enroll-id">Device ID</label
+                  ><input
+                    id="enroll-id"
+                    maxlength="50"
+                    class="inline-input"
+                    placeholder="managed-laptop-001"
+                  /><label for="enroll-label">Device label</label
+                  ><input
+                    id="enroll-label"
+                    class="inline-input"
+                    placeholder="Synthetic laptop"
+                  /><label for="enroll-platform">Platform</label
+                  ><select id="enroll-platform" class="inline-input">
+                    <option value="linux">Linux</option>
+                    <option value="darwin">macOS</option>
+                    <option value="windows">Windows</option>
+                  </select>
+                  <div class="toolbar">
+                    <button id="enroll-button">Enroll observation device</button>
+                  </div>
+                  <div id="enroll-secret" hidden>
+                    <label for="device-credential">One-time device credential</label
+                    ><input
+                      id="device-credential"
+                      type="password"
+                      class="inline-input"
+                      autocomplete="off"
+                    /><button id="show-credential" class="ghost">Show credential</button>
+                    <p class="subtle">
+                      Store privately for the device agent. It is cleared when you reconnect.
+                    </p>
+                  </div>
+                </div>
+              </section>
+              <section class="panel" id="import">
+                <div class="panel-head">
+                  <h2>Import an observation</h2>
+                  <span class="badge">Strict input contract</span>
+                </div>
+                <div class="panel-body">
+                  <p>
+                    Import a validated manual or Fleet projection for an enrolled observation
+                    device.
+                  </p>
+                  <label for="observation-file">JSON observation</label
+                  ><input
+                    id="observation-file"
+                    type="file"
+                    accept="application/json,.json"
+                    class="upload"
+                  />
+                  <div class="toolbar">
+                    <button id="import-observation">Validate and import</button>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="footer">
+            <span>Evidence before assumptions · Explicit trust boundaries</span
+            ><span>Local assets · No telemetry</span>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+
+> endpointops@1.0.0 coverage
+> node --experimental-test-coverage --import tsx --test --test-concurrency=1 test/*.test.ts
+
+✔ known failures, missing data and stale data are distinct from passing posture (7.631042ms)
+✔ approved local remediation verifies changed posture and replay causes no second mutation (2.579417ms)
+✔ ticket closure requires a fresh passing observation and preserves its evidence digest (2.596ms)
+✔ changed target, changed observation, stale snapshot and wrong digest prevent mutation (3.610334ms)
+✔ physical devices cannot receive the synthetic remediation (0.945584ms)
+✔ device credentials are shown once, scoped, hashed in storage and omitted from exports (2.384417ms)
+✔ device ingestion rejects replay, forged device IDs, old envelopes and extra fields (1.893333ms)
+✔ manual credential rotation invalidates the old token immediately (1.1765ms)
+✔ asset lifecycle checks versions, ownership and terminal retirement (1.847458ms)
+✔ stale or malformed observations cannot overwrite evidence and duplicates do not open duplicate tickets (0.770334ms)
+✔ Fleet adapter validates the pinned host and retains unknown numeric checks (19.916375ms)
+✔ read-only local collector produces the strict contract without serials or account names (74.356208ms)
+✔ HTTP authorization separates tenants, enrollment credentials, observations and remediation (93.625458ms)
+✔ network diagnostics use real local DNS/TCP and report an unsupported TLS endpoint as failure (21.002959ms)
+✔ failed persisted readback rolls back remediation, approval consumption and idempotency (1.611834ms)
+✔ signed access tokens map application permissions from the server registry (33.200375ms)
+✔ access-token constraint: issuer (3.505583ms)
+✔ access-token constraint: audience (1.785333ms)
+✔ access-token constraint: expired (1.355ms)
+✔ access-token constraint: future (0.749875ms)
+✔ access-token constraint: lifetime (0.502917ms)
+✔ access-token constraint: subject (0.558375ms)
+✔ access-token constraint: type (0.915875ms)
+✔ access-token constraint: jti (0.989125ms)
+✔ access-token constraint: forged-privileges (0.717625ms)
+✔ missing, malformed, foreign, symmetric and oversized bearer tokens fail closed (1.668375ms)
+✔ RS256 public verification works and private JWKS or duplicate registry subjects reject (86.038583ms)
+✔ canonical request fingerprints preserve order of arrays and ignore object key order (0.403542ms)
+✔ rate buckets expire, enforce capacity and reject excess requests (0.672042ms)
+✔ audit edits and middle deletion fail verification; persistence and wrong-key checks work (38.722208ms)
+✔ nested transactions roll back only the failed nested savepoint (1.4965ms)
+✔ independent review and execution reject self-approval even with combined roles (1.386917ms)
+✔ approval expiry, changed policy, wrong digest and rejection prevent dispatch (1.844584ms)
+✔ idempotency binds actor and exact operation and never claims a completed plan twice (1.235916ms)
+✔ HTTP boundary rejects untrusted origins, hosts, tokens, oversized bodies and excess traffic (295.70075ms)
+✔ fixed endpoint transport refuses unsafe URL shapes, redirects, oversized and malformed responses (20.430458ms)
+✔ completed operation replay remains read-only after reopening durable state (4.637ms)
+✔ a failed transaction start leaves the next request in a fresh immediate transaction (0.475417ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1883.265583
+ℹ start of coverage report
+ℹ ---------------------------------------------------------------------
+ℹ file            | line % | branch % | funcs % | uncovered lines
+ℹ ---------------------------------------------------------------------
+ℹ src             |        |          |         |
+ℹ  app.ts         |  77.42 |   100.00 |   40.00 | 13 16 24 29-37 41 44
+ℹ  approvals.ts   |  95.10 |    87.23 |   88.24 | 16 35 73 87 89-91
+ℹ  collector.ts   |  98.11 |    30.00 |  100.00 | 22
+ℹ  diagnostics.ts |  97.18 |    77.78 |   66.67 | 32 43
+ℹ  endpoints.ts   |  98.26 |    82.46 |  100.00 | 27-28 93 120 129 194
+ℹ  fleet.ts       |  98.41 |    76.92 |  100.00 | 33
+ℹ  http.ts        |  91.18 |    92.59 |   61.54 | 55-58 67 74 77-79
+ℹ  lab.ts         | 100.00 |    75.00 |  100.00 |
+ℹ  net.ts         |  97.14 |    82.76 |  100.00 | 37 42
+ℹ  policies.ts    | 100.00 |    93.33 |  100.00 |
+ℹ  security.ts    | 100.00 |    96.61 |  100.00 |
+ℹ  store.ts       |  94.59 |    93.75 |   85.00 | 14-16 57-58 67 93-94
+ℹ ---------------------------------------------------------------------
+ℹ all files       |  96.36 |    86.19 |   84.11 |
+ℹ ---------------------------------------------------------------------
+ℹ end of coverage report

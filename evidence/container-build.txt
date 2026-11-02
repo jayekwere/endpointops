@@ -1,0 +1,128 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [build 1/7] FROM docker.io/library/node:24-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85
+#1 resolve docker.io/library/node:24-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 987B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 135B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 12.78kB done
+#5 DONE 0.0s
+
+#6 [build 2/7] WORKDIR /app
+#6 CACHED
+
+#7 [build 3/7] COPY package.json package-lock.json ./
+#7 CACHED
+
+#8 [build 4/7] RUN npm ci --ignore-scripts
+#8 CACHED
+
+#9 [build 5/7] COPY . .
+#9 DONE 0.0s
+
+#10 [build 6/7] RUN npm run typecheck && npm test && npm run build
+#10 0.233
+#10 0.233 > endpointops@1.0.0 typecheck
+#10 0.233 > tsc --noEmit && tsc -p tsconfig.web.json
+#10 0.233
+#10 1.050
+#10 1.050 > endpointops@1.0.0 test
+#10 1.050 > node --import tsx --test --test-concurrency=1 test/*.test.ts
+#10 1.050
+#10 1.590 ✔ known failures, missing data and stale data are distinct from passing posture (7.297166ms)
+#10 1.590 ✔ approved local remediation verifies changed posture and replay causes no second mutation (5.482708ms)
+#10 1.590 ✔ ticket closure requires a fresh passing observation and preserves its evidence digest (3.933ms)
+#10 1.590 ✔ changed target, changed observation, stale snapshot and wrong digest prevent mutation (6.965708ms)
+#10 1.590 ✔ physical devices cannot receive the synthetic remediation (3.079083ms)
+#10 1.591 ✔ device credentials are shown once, scoped, hashed in storage and omitted from exports (3.937791ms)
+#10 1.591 ✔ device ingestion rejects replay, forged device IDs, old envelopes and extra fields (3.6065ms)
+#10 1.591 ✔ manual credential rotation invalidates the old token immediately (2.906916ms)
+#10 1.591 ✔ asset lifecycle checks versions, ownership and terminal retirement (2.931417ms)
+#10 1.592 ✔ stale or malformed observations cannot overwrite evidence and duplicates do not open duplicate tickets (1.447917ms)
+#10 1.592 ✔ Fleet adapter validates the pinned host and retains unknown numeric checks (15.546708ms)
+#10 1.592 ✔ read-only local collector produces the strict contract without serials or account names (0.303375ms)
+#10 1.740 ✔ HTTP authorization separates tenants, enrollment credentials, observations and remediation (124.719291ms)
+#10 1.783 ✔ network diagnostics use real local DNS/TCP and report an unsupported TLS endpoint as failure (37.670625ms)
+#10 1.783 ✔ failed persisted readback rolls back remediation, approval consumption and idempotency (3.196042ms)
+#10 2.341 ✔ signed access tokens map application permissions from the server registry (30.410125ms)
+#10 2.345 ✔ access-token constraint: issuer (2.039667ms)
+#10 2.347 ✔ access-token constraint: audience (3.682ms)
+#10 2.349 ✔ access-token constraint: expired (1.323583ms)
+#10 2.351 ✔ access-token constraint: future (1.562125ms)
+#10 2.353 ✔ access-token constraint: lifetime (1.207041ms)
+#10 2.356 ✔ access-token constraint: subject (2.7615ms)
+#10 2.358 ✔ access-token constraint: type (2.794083ms)
+#10 2.361 ✔ access-token constraint: jti (2.151917ms)
+#10 2.364 ✔ access-token constraint: forged-privileges (2.542958ms)
+#10 2.368 ✔ missing, malformed, foreign, symmetric and oversized bearer tokens fail closed (5.120416ms)
+#10 2.691 ✔ RS256 public verification works and private JWKS or duplicate registry subjects reject (66.364666ms)
+#10 2.691 ✔ canonical request fingerprints preserve order of arrays and ignore object key order (0.388834ms)
+#10 2.693 ✔ rate buckets expire, enforce capacity and reject excess requests (0.209666ms)
+#10 2.693 ✔ audit edits and middle deletion fail verification; persistence and wrong-key checks work (31.15675ms)
+#10 2.702 ✔ nested transactions roll back only the failed nested savepoint (0.949541ms)
+#10 2.703 ✔ independent review and execution reject self-approval even with combined roles (1.242417ms)
+#10 2.703 ✔ approval expiry, changed policy, wrong digest and rejection prevent dispatch (1.720375ms)
+#10 2.704 ✔ idempotency binds actor and exact operation and never claims a completed plan twice (2.333541ms)
+#10 2.769 ✔ HTTP boundary rejects untrusted origins, hosts, tokens, oversized bodies and excess traffic (237.544542ms)
+#10 2.769 ✔ fixed endpoint transport refuses unsafe URL shapes, redirects, oversized and malformed responses (15.235208ms)
+#10 2.769 ✔ completed operation replay remains read-only after reopening durable state (41.065583ms)
+#10 2.769 ✔ a failed transaction start leaves the next request in a fresh immediate transaction (0.797792ms)
+#10 2.786 ℹ tests 38
+#10 2.786 ℹ suites 0
+#10 2.786 ℹ pass 38
+#10 2.786 ℹ fail 0
+#10 2.786 ℹ cancelled 0
+#10 2.786 ℹ skipped 0
+#10 2.786 ℹ todo 0
+#10 2.786 ℹ duration_ms 1710.067959
+#10 3.279
+#10 3.279 > endpointops@1.0.0 build
+#10 3.279 > tsc && node scripts/build-web.mjs
+#10 3.279
+#10 DONE 3.6s
+
+#11 [build 7/7] RUN npm prune --omit=dev --ignore-scripts
+#11 2.603
+#11 2.603 removed 11 packages, and audited 51 packages in 2s
+#11 2.603
+#11 2.603 21 packages are looking for funding
+#11 2.603   run `npm fund` for details
+#11 2.603
+#11 2.603 found 0 vulnerabilities
+#11 DONE 2.6s
+
+#12 [runtime 4/6] COPY --from=build /app/package.json /app/package-lock.json ./
+#12 CACHED
+
+#13 [runtime 3/6] COPY --from=build /app/node_modules ./node_modules
+#13 CACHED
+
+#14 [runtime 5/6] COPY --from=build /app/dist/src ./dist/src
+#14 CACHED
+
+#15 [runtime 6/6] COPY --from=build /app/dist/web ./dist/web
+#15 DONE 0.1s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 0.2s done
+#16 exporting manifest sha256:5c38b248cfb6704ef90ab5360ba0ea38f730cdb7de078b57c63204cc90d89ee1
+#16 exporting manifest sha256:5c38b248cfb6704ef90ab5360ba0ea38f730cdb7de078b57c63204cc90d89ee1 0.0s done
+#16 exporting config sha256:8d39794309165d7e24e5390c98002af507d1f8fcffc35efd546e9f3097c2e195 done
+#16 exporting attestation manifest sha256:34a5b336cceda8c895819ebba4694055d686e01afa29b37cb902a46e6d62717c 0.0s done
+#16 exporting manifest list sha256:399de97ecd364303456b1bf3141856fc168a347c0044830cdcab7f1d645ab667
+#16 exporting manifest list sha256:399de97ecd364303456b1bf3141856fc168a347c0044830cdcab7f1d645ab667 done
+#16 naming to docker.io/library/endpointops:local done
+#16 unpacking to docker.io/library/endpointops:local 0.0s done
+#16 DONE 0.4s

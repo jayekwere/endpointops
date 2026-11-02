@@ -1,0 +1,1 @@
+PASS: UID 1000, read-only container, authentication, approved lab repair, persisted readback, ticket closure and tenant isolation

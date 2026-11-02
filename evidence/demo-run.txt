@@ -1,0 +1,25 @@
+
+> endpointops@1.0.0 demo
+> node --import tsx scripts/demo.ts --write
+
+{
+  "scope": "synthetic device remediation, real read-only collector contract checked separately",
+  "prematureClosureStatus": 409,
+  "repair": {
+    "scope": "local-simulation",
+    "deviceId": "lab-laptop",
+    "action": "enable-lab-firewall",
+    "before": "496edb81e035467981d4e43f5da61eeec7752c0a3dc2fafa535fa3f7b99fa191",
+    "after": "5239f371a210d108aed750c1393d0a4cf83549cd419209df0274349edce7d013",
+    "verified": true
+  },
+  "duplicateMutation": false,
+  "ticketStatus": "resolved",
+  "passingChecks": 5,
+  "collector": {
+    "schemaValidated": true,
+    "publicReadings": "omitted to avoid publishing workstation posture"
+  },
+  "supportBundlePrivacy": "No usernames, addresses, process lists, recovery keys, or credentials collected",
+  "auditIntegrity": true
+}
