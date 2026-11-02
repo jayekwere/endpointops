@@ -31,7 +31,7 @@ export function collect(deviceId: string, now = Date.now()): Snapshot {
       firewall = /State = 1/.test(output) ? true : /State = 0/.test(output) ? false : null;
     } catch {}
   }
-  let free = 0;
+  let free: number | null = null;
   try {
     const f = statfsSync('/');
     free = f.bavail * f.bsize;

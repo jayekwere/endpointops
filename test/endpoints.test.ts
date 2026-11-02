@@ -359,6 +359,172 @@ test('read-only local collector produces the strict contract without serials or 
   assert.equal('username' in result, false);
   assert.equal('serial' in result, false);
 });
+test('device observation budgets preserve control actions, other devices and tenant capacity', () => {
+  const s = setup();
+  const enrolledDevice = enrolled(s);
+  const send = (id: string, token: string, now: number) =>
+    s.service.agent(
+      {
+        tenant: 'sandbox',
+        deviceId: id,
+        nonce: randomUUID(),
+        sentAt: new Date(now).toISOString(),
+        snapshot: {
+          ...snapshot(id, now),
+          checks: {
+            diskEncrypted: true,
+            firewallEnabled: true,
+            patchAgeDays: 1,
+            localAdminCount: 1,
+            mdmEnrolled: true,
+          },
+        },
+      },
+      'Bearer ' + token,
+    );
+  try {
+    let now = s.store.now();
+    for (let i = 0; i < 1000; i++) {
+      s.advance(1);
+      now = s.store.now();
+      send('managed-001', enrolledDevice.deviceToken!, now);
+    }
+    assert.equal(s.store.auditCount('sandbox', 'device.observed', 'device:managed-001'), 1000);
+    const before = s.store.need<Snapshot>('sandbox', 'snapshot', 'managed-001');
+    const nonceCount = s.store.count('sandbox', 'nonce');
+    s.advance(600001);
+    assert.throws(() => send('managed-001', enrolledDevice.deviceToken!, s.store.now()), {
+      code: 'device_observation_capacity_reached',
+    });
+    assert.deepEqual(s.store.need('sandbox', 'snapshot', 'managed-001'), before);
+    assert.equal(s.store.count('sandbox', 'nonce'), nonceCount);
+    // Pruning replay state does not reset the persisted observation budget.
+    // Exact duplicate observations spend no audit budget; nonce replay state is still recorded.
+    assert.equal(
+      s.service.agent(
+        {
+          tenant: 'sandbox',
+          deviceId: 'managed-001',
+          nonce: randomUUID(),
+          sentAt: new Date(s.store.now()).toISOString(),
+          snapshot: before,
+        },
+        'Bearer ' + enrolledDevice.deviceToken,
+      ).duplicate,
+      true,
+    );
+    const rotated = s.service.rotate(op, 'managed-001');
+    assert.throws(() => send('managed-001', rotated.deviceToken, s.store.now()), {
+      code: 'device_observation_capacity_reached',
+    });
+    const second = enrolled(s, 'managed-002');
+    for (let i = 0; i < 1000; i++) {
+      s.advance(1);
+      send('managed-002', second.deviceToken!, s.store.now());
+    }
+    const third = enrolled(s, 'managed-003');
+    assert.throws(() => send('managed-003', third.deviceToken!, s.store.now()), {
+      code: 'device_observation_capacity_reached',
+    });
+    const other = { ...op, tenant: 'isolated' };
+    assert.ok(
+      s.service.enroll(other, {
+        id: 'foreign-device',
+        label: 'Synthetic isolated device',
+        platform: 'linux',
+        region: 'EU',
+        serialAlias: 'foreign-serial',
+        mode: 'managed-observation',
+      }).deviceToken,
+    );
+    const p = approved(s);
+    assert.equal(s.service.execute(op, p.id, p.digest, 'budget-repair').status, 'completed');
+    s.service.transition(op, 'managed-003', { version: 1, state: 'retired', ownerAlias: null });
+    assert.equal(s.store.verify(), true);
+  } finally {
+    s.store.close();
+  }
+});
+test('one device cannot fill the shared replay cache using duplicate observations', () => {
+  const s = setup();
+  const first = enrolled(s),
+    second = enrolled(s, 'managed-002');
+  const report = snapshot('managed-001', s.store.now());
+  const send = () =>
+    s.service.agent(
+      {
+        tenant: 'sandbox',
+        deviceId: 'managed-001',
+        nonce: randomUUID(),
+        sentAt: new Date(s.store.now()).toISOString(),
+        snapshot: report,
+      },
+      'Bearer ' + first.deviceToken,
+    );
+  try {
+    for (let i = 0; i < 1000; i++) send();
+    const count = s.store.count('sandbox', 'nonce');
+    assert.throws(send, { code: 'device_nonce_capacity_reached' });
+    assert.equal(s.store.count('sandbox', 'nonce'), count);
+    assert.equal(
+      s.service.agent(
+        {
+          tenant: 'sandbox',
+          deviceId: 'managed-002',
+          nonce: randomUUID(),
+          sentAt: new Date(s.store.now()).toISOString(),
+          snapshot: snapshot('managed-002', s.store.now()),
+        },
+        'Bearer ' + second.deviceToken,
+      ).accepted,
+      true,
+    );
+    s.service.rotate(op, 'managed-001');
+    s.advance(600001);
+    const rotated = s.service.rotate(op, 'managed-001');
+    assert.equal(
+      s.service.agent(
+        {
+          tenant: 'sandbox',
+          deviceId: 'managed-001',
+          nonce: randomUUID(),
+          sentAt: new Date(s.store.now()).toISOString(),
+          snapshot: report,
+        },
+        'Bearer ' + rotated.deviceToken,
+      ).duplicate,
+      true,
+    );
+    assert.equal(s.store.count('sandbox', 'nonce'), 1);
+    assert.equal(s.store.verify(), true);
+  } finally {
+    s.store.close();
+  }
+});
+test('older open support cases remain visible and do not duplicate beyond 200 retained cases', () => {
+  const s = setup();
+  try {
+    for (let i = 0; i < 220; i++) {
+      const id = randomUUID();
+      s.store.put('sandbox', 'ticket', id, {
+        id,
+        deviceId: 'fixture-' + i,
+        finding: 'firewallEnabled',
+        status: 'open',
+        createdAt: new Date(s.store.now()).toISOString(),
+      });
+    }
+    const before = s.store.count('sandbox', 'ticket');
+    s.advance(1);
+    const old = s.store.need<Snapshot>('sandbox', 'snapshot', 'lab-laptop');
+    s.service.ingest(op, { ...old, observedAt: new Date(s.store.now()).toISOString() });
+    assert.equal(s.store.count('sandbox', 'ticket'), before);
+    assert.equal(s.service.tickets(op).length, before);
+    assert.equal(s.service.tickets(op).filter((t) => t.deviceId === 'lab-laptop').length, 1);
+  } finally {
+    s.store.close();
+  }
+});
 test('HTTP authorization separates tenants, enrollment credentials, observations and remediation', async () => {
   const s = setup(),
     { auth, tokens } = await demoAuth('endpointops'),

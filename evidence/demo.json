@@ -5,8 +5,8 @@
     "scope": "local-simulation",
     "deviceId": "lab-laptop",
     "action": "enable-lab-firewall",
-    "before": "496edb81e035467981d4e43f5da61eeec7752c0a3dc2fafa535fa3f7b99fa191",
-    "after": "5239f371a210d108aed750c1393d0a4cf83549cd419209df0274349edce7d013",
+    "before": "16abe4e70dbd48997910b393b0ac66e885f7906faec7c863392437437cf5979e",
+    "after": "f25d0751da4a3abf1aed043e659d3165425f2b401422df7ec5820234291a2a5d",
     "verified": true
   },
   "duplicateMutation": false,

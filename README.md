@@ -90,3 +90,5 @@ Configured mode uses the shared [authentication and deployment contract](docs/OP
 Single process and local SQLite. Maximum 200 devices and 1,000 retained support cases per tenant. Nonces are bounded and old entries are pruned after their replay window. Device credentials require private storage and explicit rotation; they have no automatic expiry or managed hardware trust. Public demo tokens expire in fifteen minutes. The HMAC audit chain requires independently retained checkpoints for stronger rollback resistance. There is no native MDM remediation, remote shell, carrier/procurement integration, proof that a device's report is truthful, or claim that a passing projected policy establishes compliance.
 
 [Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) · [Threat model](docs/THREAT-MODEL.md) · [Security reporting](SECURITY.md) · [MIT](LICENSE)
+
+Security review and remediation details are in [the review record](docs/SECURITY-REVIEW.md). Audit history is bounded at 10,000 entries per tenant and 100,000 globally; see the operations guide before any long-running deployment.

@@ -106,6 +106,13 @@ export class Endpoints {
           return { accepted: false, duplicate: true, digest: digest(old) };
         throw new Fault(409, 'observation_not_newer');
       }
+      // Device credentials may report posture, but cannot consume the human control budget.
+      if (
+        snapshot.source === 'device-agent' &&
+        (this.store.auditCount(actor.tenant, 'device.observed', actor.subject) >= 1000 ||
+          this.store.auditCount(actor.tenant, 'device.observed', undefined, 'device-agent') >= 2000)
+      )
+        throw new Fault(507, 'device_observation_capacity_reached');
       this.store.put(actor.tenant, 'snapshot', device.id, snapshot);
       const hash = digest(snapshot);
       this.store.audit(actor, 'device.observed', 'completed', {
@@ -115,7 +122,7 @@ export class Endpoints {
       });
       for (const f of evaluate(snapshot, this.store.now()).filter((f) => f.state !== 'pass')) {
         const existing = this.store
-          .list<Ticket>(actor.tenant, 'ticket')
+          .list<Ticket>(actor.tenant, 'ticket', 1000)
           .find((t) => t.deviceId === device.id && t.finding === f.id && t.status !== 'resolved');
         if (!existing) {
           if (this.store.count(actor.tenant, 'ticket') >= 1000)
@@ -163,12 +170,19 @@ export class Endpoints {
     const actor: Identity = { tenant: b.tenant, subject: 'device:' + d.id, roles: ['operator'] };
     return this.store.tx(() => {
       if (this.store.get(b.tenant, 'nonce', b.nonce)) throw new Fault(409, 'device_replay');
-      for (const entry of this.store.list<{ id: string; at: string }>(b.tenant, 'nonce', 10000))
+      let deviceNonces = 0;
+      for (const entry of this.store.list<{ id: string; at: string; deviceId?: string }>(
+        b.tenant,
+        'nonce',
+        10000,
+      ))
         if (this.store.now() - Date.parse(entry.at) > 600000)
           this.store.remove(b.tenant, 'nonce', entry.id);
+        else if (entry.deviceId === d.id) deviceNonces++;
+      if (deviceNonces >= 1000) throw new Fault(409, 'device_nonce_capacity_reached');
       if (this.store.count(b.tenant, 'nonce') >= 10000)
         throw new Fault(409, 'device_nonce_capacity_reached');
-      this.store.put(b.tenant, 'nonce', b.nonce, { id: b.nonce, at: b.sentAt });
+      this.store.put(b.tenant, 'nonce', b.nonce, { id: b.nonce, at: b.sentAt, deviceId: d.id });
       return this.accept(actor, d, b.snapshot);
     });
   }
@@ -297,7 +311,7 @@ export class Endpoints {
   }
   tickets(actor: Identity) {
     requireRole(actor, 'viewer', 'requester', 'reviewer', 'operator');
-    return this.store.list<Ticket>(actor.tenant, 'ticket');
+    return this.store.list<Ticket>(actor.tenant, 'ticket', 1000);
   }
   ticket(actor: Identity, id: string, input: unknown) {
     requireRole(actor, 'operator');

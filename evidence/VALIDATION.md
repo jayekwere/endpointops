@@ -1,12 +1,12 @@
 # Validation record
 
-Recorded for the 1.0.0 source release on 2026-11-01, America/Vancouver. Results describe executed checks. Host tests used Node 26.3.0; the digest-pinned container independently runs the suite on Node 24. Browser tests use Playwright and a compatible local browser, while hosted CI installs the Playwright Chromium build.
+Recorded for the 1.0.1 source release on 2026-11-01, America/Vancouver. Results describe executed checks. Host tests used Node 26.3.0; the digest-pinned container independently runs the suite on Node 24. Browser tests use Playwright and a compatible local browser, while hosted CI installs the Playwright Chromium build.
 
 | Check | Observed result | Evidence |
 | --- | --- | --- |
 | Formatting, strict types, tests, build and asserted demo | Passed | [verify.txt](verify.txt) |
-| Automated tests | 38 passed, no failures or skips | [coverage.txt](coverage.txt) |
-| Exercised source coverage | 96.36% lines, 86.19% branches | [coverage.txt](coverage.txt) |
+| Automated tests | 42 passed, no failures or skips | [coverage.txt](coverage.txt) |
+| Exercised source coverage | 96.66% lines, 87.25% branches | [coverage.txt](coverage.txt) |
 | Browser workflows | 2 passed, desktop 1440px and mobile 390px checked, no page errors | [browser.txt](browser.txt), [desktop](../docs/dashboard.png), [mobile](../docs/dashboard-mobile.png) |
 | Container build and Node 24 suite | Passed | [container-build.txt](container-build.txt) |
 | Restricted container behavior | Passed with UID 1000, read-only root, dropped capabilities and bounded resources | [container-smoke.txt](container-smoke.txt) |
@@ -17,4 +17,4 @@ The coverage percentages include imported implementation modules. Startup config
 
 [Source manifest](source-manifest.json) fingerprints implementation, tests, build inputs, workflow, fixtures and dependency lockfile. Transcripts trim trailing whitespace only. Demo IDs, timestamps, audit hashes and timings vary. Public receipts contain only synthetic identity/device data and controlled lab outputs; actual workstation posture is omitted. Hosted CI status is linked from the README badge and is specific to its recorded commit.
 
-Tests validate real read-only collector output against the strict contract, real loopback DNS/TCP diagnostics, device credential scope/rotation, nonce replay, stale and unknown posture, asset versions, independent synthetic remediation, persisted-readback rollback and evidence-based case closure. The browser also tests hostile label text and credential clearing. The Fleet adapter uses contract fixtures; no live Fleet or native MDM server was used. The synthetic firewall repair changes only local state.
+Tests validate real read-only collector output against the strict contract, real loopback DNS/TCP diagnostics, device credential scope/rotation, nonce replay, stale and unknown posture, asset versions, independent synthetic remediation, persisted-readback rollback and evidence-based case closure. The browser also tests hostile label text and credential clearing. The Fleet adapter uses contract fixtures; no live Fleet or native MDM server was used. The synthetic firewall repair changes only local state. New regressions exercise device and tenant audit budgets, control-action reserve, nonce partitioning including duplicate envelopes, restart/credential-rotation behavior and case lookup beyond 200 retained entries.
